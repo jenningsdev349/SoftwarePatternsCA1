@@ -1,17 +1,19 @@
 import java.util.ArrayList; 
 
-public class CustomerAccount  {
+/* REFACTORING NOTE: Normally this class should be abstract according to factory design pattern, however leaving it concrete to allow menu code to run */
+
+public class CustomerAccount {
    
-	String number;
-	double balance;
-	ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
+	protected String number;
+	protected double balance;
+	protected ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
 
 	//Blank Constructor
 	public CustomerAccount()
 	{
 		this.number = "";
 		this.balance = 0;
-		this.transactionList = null;
+		this.transactionList = new ArrayList<>();
 	}
 	
 	//Constructor with Details
