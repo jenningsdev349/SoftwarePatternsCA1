@@ -33,8 +33,11 @@ public class Menu extends JFrame{
 	 JPanel panel2;
 		JButton add;
 		String 	PPS,firstName,surname,DOB,CustomerID;
-	
-		LoginStrategy strategy;
+		JButton deleteCustomer, deleteAccount, bankChargesButton, interestButton, 
+			editCustomerButton, navigateButton, summaryButton, accountButton, returnButton, continueButton;
+		ButtonGroup userType;
+	LoginStrategy strategy;
+		
 	public static void main(String[] args)
 	{
 		Menu driver = new Menu();
@@ -46,39 +49,9 @@ public class Menu extends JFrame{
 		   /*The menuStart method asks the user if they are a new customer, an existing customer or an admin. It will then start the create customer process
 		  if they are a new customer, or will ask them to log in if they are an existing customer or admin.*/
 		
+			f = createFrame("User Type", 400, 300);
 			
-		
-			
-			f = new JFrame("User Type");
-			f.setSize(400, 300);
-			f.setLocation(200, 200);
-			f.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent we) { System.exit(0); }
-			});
-
-			JPanel userTypePanel = new JPanel();
-			final ButtonGroup userType = new ButtonGroup();
-			JRadioButton radioButton;
-			userTypePanel.add(radioButton = new JRadioButton("Existing Customer"));
-			radioButton.setActionCommand("Customer");
-			userType.add(radioButton);
-			
-			userTypePanel.add(radioButton = new JRadioButton("Administrator"));
-			radioButton.setActionCommand("Administrator");
-			userType.add(radioButton);
-			
-			userTypePanel.add(radioButton = new JRadioButton("New Customer"));
-			radioButton.setActionCommand("New Customer");
-			userType.add(radioButton);
-
-			JPanel continuePanel = new JPanel();
-			JButton continueButton = new JButton("Continue");
-			continuePanel.add(continueButton);
-
-			Container content = f.getContentPane();
-			content.setLayout(new GridLayout(2, 1));
-			content.add(userTypePanel);
-			content.add(continuePanel);
+			createMenuStartScreen();
 
 			/* REFACTOR: Implemented Strategy pattern here so when user selects any of these options, it instantiates their respective Strategy */
 			
@@ -114,99 +87,27 @@ public class Menu extends JFrame{
 			LoginContext context = new LoginContext(strategy);
 			context.executeLogin();
 	}
-	
 
-	
 	public void admin()
 	{
 		dispose();
 		
-		f = new JFrame("Administrator Menu");
-		f.setSize(400, 400);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) { System.exit(0); }
-		});          
+		f = createFrame("Administrator Menu", 400, 400);     
 		f.setVisible(true);
 		
-		JPanel deleteCustomerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton deleteCustomer = new JButton("Delete Customer");	
-		deleteCustomer.setPreferredSize(new Dimension(250, 20));
-		deleteCustomerPanel.add(deleteCustomer);
+		createAdminScreen();	
 		
-		JPanel deleteAccountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton deleteAccount = new JButton("Delete Account");
-		deleteAccount.setPreferredSize(new Dimension(250, 20));	
-		deleteAccountPanel.add(deleteAccount);
-		
-		JPanel bankChargesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton bankChargesButton = new JButton("Apply Bank Charges");
-		bankChargesButton.setPreferredSize(new Dimension(250, 20));	
-		bankChargesPanel.add(bankChargesButton);
-		
-		JPanel interestPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton interestButton = new JButton("Apply Interest");
-		interestPanel.add(interestButton);
-		interestButton.setPreferredSize(new Dimension(250, 20));
-		
-		JPanel editCustomerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton editCustomerButton = new JButton("Edit existing Customer");
-		editCustomerPanel.add(editCustomerButton);
-		editCustomerButton.setPreferredSize(new Dimension(250, 20));
-		
-		JPanel navigatePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton navigateButton = new JButton("Navigate Customer Collection");
-		navigatePanel.add(navigateButton);
-		navigateButton.setPreferredSize(new Dimension(250, 20));
-		
-		JPanel summaryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton summaryButton = new JButton("Display Summary Of All Accounts");
-		summaryPanel.add(summaryButton);
-		summaryButton.setPreferredSize(new Dimension(250, 20));
-		
-		JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JButton accountButton = new JButton("Add an Account to a Customer");
-		accountPanel.add(accountButton);
-		accountButton.setPreferredSize(new Dimension(250, 20));
-		
-		JPanel returnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JButton returnButton = new JButton("Exit Admin Menu");
-		returnPanel.add(returnButton);
-
-		JLabel label1 = new JLabel("Please select an option");
-		
-		content = f.getContentPane();
-		content.setLayout(new GridLayout(9, 1));
-		content.add(label1);
-		content.add(accountPanel);
-		content.add(bankChargesPanel);
-		content.add(interestPanel);
-		content.add(editCustomerPanel);
-		content.add(navigatePanel);
-		content.add(summaryPanel);	
-		content.add(deleteCustomerPanel);
-	//	content.add(deleteAccountPanel);
-		content.add(returnPanel);
-		
-		
-		bankChargesButton.addActionListener(new ActionListener(  ) {
-			public void actionPerformed(ActionEvent ae) {
-				
-				boolean loop = true;
-				
+		bankChargesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {				
 				boolean found = false;
 			
-				if(customerList.isEmpty())
-				{
+				if(customerList.isEmpty()) {
 					JOptionPane.showMessageDialog(f, "There are no customers yet!"  ,"Oops!",  JOptionPane.INFORMATION_MESSAGE);
 					f.dispose();
 					admin();
-					
 				}
-				else
-				{
-			    while(loop)
-			    {
+				else{
+			    while(true) {
 			    Object customerID = JOptionPane.showInputDialog(f, "Customer ID of Customer You Wish to Apply Charges to:");
 			    
 			    for (Customer aCustomer: customerList){
@@ -215,34 +116,26 @@ public class Menu extends JFrame{
 			    	{
 			    		found = true;
 			    		customer = aCustomer; 
-			    		loop = false;
+			    		break;
 			    	}					    	
 			    }
 			    
 			    if(found == false)
 			    {
 			    	int reply  = JOptionPane.showConfirmDialog(null, null, "User not found. Try again?", JOptionPane.YES_NO_OPTION);
-			    	if (reply == JOptionPane.YES_OPTION) {
-			    		loop = true;
+			    	if (reply == JOptionPane.YES_OPTION) { 
+			    		f.dispose();
 			    	}
 			    	else if(reply == JOptionPane.NO_OPTION)
 			    	{
 			    		f.dispose();
-			    		loop = false;
-			    	
-			    		admin();
+			    		break;
 			    	}
 			    }  
 			    else
 			    {
 			    	f.dispose();
-			    	f = new JFrame("Administrator Menu");
-					f.setSize(400, 300);
-					f.setLocation(200, 200);
-					f.addWindowListener(new WindowAdapter() {
-						public void windowClosing(WindowEvent we) { System.exit(0); }
-					});          
-					f.setVisible(true);
+					f = createFrame("Administrator Menu", 400, 400);
 				
 				
 				    JComboBox<String> box = new JComboBox<String>();
@@ -381,14 +274,7 @@ public class Menu extends JFrame{
 			    else
 			    {
 			    	f.dispose();
-			    	f = new JFrame("Administrator Menu");
-					f.setSize(400, 300);
-					f.setLocation(200, 200);
-					f.addWindowListener(new WindowAdapter() {
-						public void windowClosing(WindowEvent we) { System.exit(0); }
-					});          
-					f.setVisible(true);
-				
+					f = createFrame("Administrator Menu", 400, 400);     
 				
 				    JComboBox<String> box = new JComboBox<String>();
 				    for (int i =0; i < customer.getAccounts().size(); i++)
@@ -538,12 +424,7 @@ public class Menu extends JFrame{
 				f.dispose();
 				
 				f.dispose();
-				f = new JFrame("Administrator Menu");
-				f.setSize(400, 300);
-				f.setLocation(200, 200);
-				f.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent we) { System.exit(0); }
-				});       
+				f = createFrame("Administrator Menu", 400, 400);     
 				
 				firstNameLabel = new JLabel("First Name:", SwingConstants.LEFT);
 				surnameLabel = new JLabel("Surname:", SwingConstants.LEFT);
@@ -630,14 +511,7 @@ public class Menu extends JFrame{
 			public void actionPerformed(ActionEvent ae) {
 				f.dispose();
 				
-				
-				f = new JFrame("Summary of Transactions");
-				f.setSize(400, 700);
-				f.setLocation(200, 200);
-				f.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent we) { System.exit(0); }
-				});          
-				f.setVisible(true);
+				f = createFrame("Summary of Transactions", 400, 700);
 				
 				JLabel label1 = new JLabel("Summary of all transactions: ");
 				
@@ -1059,17 +933,10 @@ public class Menu extends JFrame{
 			}
 	     });		
 	}
-	
+
 	public void customer(Customer e1)
-	{	
-		f = new JFrame("Customer Menu");
-		e1 = e;
-		f.setSize(400, 300);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) { System.exit(0); }
-		});          
-		f.setVisible(true);
+	{		
+		f = createFrame("Customer Menu", 400, 300);
 		
 		if(e.getAccounts().size() == 0)
 		{
@@ -1130,13 +997,7 @@ public class Menu extends JFrame{
 				
 		f.dispose();
 		
-		f = new JFrame("Customer Menu");
-		f.setSize(400, 300);
-		f.setLocation(200, 200);
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) { System.exit(0); }
-		});          
-		f.setVisible(true);
+		f = createFrame("Customer Menu", 400, 300);
 		
 		JPanel statementPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JButton statementButton = new JButton("Display Bank Statement");
@@ -1171,13 +1032,7 @@ public class Menu extends JFrame{
 		statementButton.addActionListener(new ActionListener(  ) {
 			public void actionPerformed(ActionEvent ae) {
 				f.dispose();
-				f = new JFrame("Customer Menu");
-				f.setSize(400, 600);
-				f.setLocation(200, 200);
-				f.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent we) { System.exit(0); }
-				});          
-				f.setVisible(true);
+				f = createFrame("Customer Menu", 400, 300);
 				
 				JLabel label1 = new JLabel("Summary of account transactions: ");
 				
@@ -1224,7 +1079,6 @@ public class Menu extends JFrame{
 		
 		lodgementButton.addActionListener(new ActionListener(  ) {
 			public void actionPerformed(ActionEvent ae) {
-			boolean loop = true;
 			boolean on = true;
 			double balance = 0;
 
@@ -1232,17 +1086,16 @@ public class Menu extends JFrame{
 			{
 				int count = 3;
 				int checkPin = ((CustomerCurrentAccount) acc).getAtm().getPin();
-				loop = true;
 				
-				while(loop)
+				while(true)
 				{
 					if(count == 0)
 					{
 						JOptionPane.showMessageDialog(f, "Pin entered incorrectly 3 times. ATM card locked."  ,"Pin",  JOptionPane.INFORMATION_MESSAGE);
 						((CustomerCurrentAccount) acc).getAtm().setValid(false);
 						customer(e); 
-						loop = false;
 						on = false;
+						break;
 					}
 					
 					String Pin = JOptionPane.showInputDialog(f, "Enter 4 digit PIN;");
@@ -1252,8 +1105,8 @@ public class Menu extends JFrame{
 				   {
 					if(checkPin == i)
 					{
-						loop = false;
 						JOptionPane.showMessageDialog(f, "Pin entry successful" ,  "Pin", JOptionPane.INFORMATION_MESSAGE);
+						break;
 						
 					}
 					else
@@ -1270,12 +1123,8 @@ public class Menu extends JFrame{
 					{
 				String balanceTest = JOptionPane.showInputDialog(f, "Enter amount you wish to lodge:");//the isNumeric method tests to see if the string entered was numeric. 
 				if(isNumeric(balanceTest))
-				{
-					
-					balance = Double.parseDouble(balanceTest);
-					loop = false;
-					
-					
+				{	
+					balance = Double.parseDouble(balanceTest);					
 				}
 				else
 				{
@@ -1413,6 +1262,107 @@ public class Menu extends JFrame{
 	     });		}		
 	     });
 	}
+	}
+	
+	public static JFrame createFrame(String title, int width, int height) {
+	    JFrame f = new JFrame(title);
+	    f.setSize(width, height);
+
+	    f.addWindowListener(new WindowAdapter() {
+	        public void windowClosing(WindowEvent we) {
+	            System.exit(0);
+	        }
+	    });
+	    
+	    f.setVisible(true);
+	    return f;
+	}
+	
+	private void createAdminScreen() {
+		JPanel deleteCustomerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton deleteCustomer = new JButton("Delete Customer");	
+		deleteCustomer.setPreferredSize(new Dimension(250, 20));
+		deleteCustomerPanel.add(deleteCustomer);
+		
+		JPanel deleteAccountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton deleteAccount = new JButton("Delete Account");
+		deleteAccount.setPreferredSize(new Dimension(250, 20));	
+		deleteAccountPanel.add(deleteAccount);
+		
+		JPanel bankChargesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton bankChargesButton = new JButton("Apply Bank Charges");
+		bankChargesButton.setPreferredSize(new Dimension(250, 20));	
+		bankChargesPanel.add(bankChargesButton);
+		
+		JPanel interestPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton interestButton = new JButton("Apply Interest");
+		interestPanel.add(interestButton);
+		interestButton.setPreferredSize(new Dimension(250, 20));
+		
+		JPanel editCustomerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton editCustomerButton = new JButton("Edit existing Customer");
+		editCustomerPanel.add(editCustomerButton);
+		editCustomerButton.setPreferredSize(new Dimension(250, 20));
+		
+		JPanel navigatePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton navigateButton = new JButton("Navigate Customer Collection");
+		navigatePanel.add(navigateButton);
+		navigateButton.setPreferredSize(new Dimension(250, 20));
+		
+		JPanel summaryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton summaryButton = new JButton("Display Summary Of All Accounts");
+		summaryPanel.add(summaryButton);
+		summaryButton.setPreferredSize(new Dimension(250, 20));
+		
+		JPanel accountPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JButton accountButton = new JButton("Add an Account to a Customer");
+		accountPanel.add(accountButton);
+		accountButton.setPreferredSize(new Dimension(250, 20));
+		
+		JPanel returnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JButton returnButton = new JButton("Exit Admin Menu");
+		returnPanel.add(returnButton);
+
+		JLabel label1 = new JLabel("Please select an option");
+		
+		content = f.getContentPane();
+		content.setLayout(new GridLayout(9, 1));
+		content.add(label1);
+		content.add(accountPanel);
+		content.add(bankChargesPanel);
+		content.add(interestPanel);
+		content.add(editCustomerPanel);
+		content.add(navigatePanel);
+		content.add(summaryPanel);	
+		content.add(deleteCustomerPanel);
+	//	content.add(deleteAccountPanel);
+		content.add(returnPanel);		
+	}
+	
+	private void createMenuStartScreen() {
+		JPanel userTypePanel = new JPanel();
+		final ButtonGroup userType = new ButtonGroup();
+		JRadioButton radioButton;
+		userTypePanel.add(radioButton = new JRadioButton("Existing Customer"));
+		radioButton.setActionCommand("Customer");
+		userType.add(radioButton);
+		
+		userTypePanel.add(radioButton = new JRadioButton("Administrator"));
+		radioButton.setActionCommand("Administrator");
+		userType.add(radioButton);
+		
+		userTypePanel.add(radioButton = new JRadioButton("New Customer"));
+		radioButton.setActionCommand("New Customer");
+		userType.add(radioButton);
+
+		JPanel continuePanel = new JPanel();
+		JButton continueButton = new JButton("Continue");
+		continuePanel.add(continueButton);
+
+		Container content = f.getContentPane();
+		content.setLayout(new GridLayout(2, 1));
+		content.add(userTypePanel);
+		content.add(continuePanel);		
 	}
 	
 	public static boolean isNumeric(String str)  // a method that tests if a string is numeric
