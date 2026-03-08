@@ -1276,7 +1276,7 @@ public class Menu extends JFrame {
 
 		ATMCard atm = new ATMCard(randomPIN, valid);	
 		
-		return new CustomerCurrentAccount(atm, number, balance, transactionList);
+		return (CustomerCurrentAccount) new CurrentAccountFactory(atm).createAccount(number, balance, transactionList);
 	}
 	
 	private CustomerDepositAccount createDepositAccount() {
@@ -1286,7 +1286,7 @@ public class Menu extends JFrame {
 														// account number
 		ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
 
-		return new CustomerDepositAccount(interest, number, balance, transactionList);
+		return (CustomerDepositAccount) new DepositAccountFactory(interest).createAccount(number, balance, transactionList);
 	}
 
 	public static boolean isNumeric(String str) // a method that tests if a string is numeric
