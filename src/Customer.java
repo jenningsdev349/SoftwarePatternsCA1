@@ -110,6 +110,16 @@ public class Customer {
 		this.accounts = accounts;
 	}
 	
+	public int getTotalTransactions() {
+	    int total = 0;
+
+	    for (CustomerAccount account : accounts) {
+	        total += account.getTotalTransactions();
+	    }
+
+	    return total;
+	}
+	
 	public String toString()
 	{
 		return "PPS number = " + this.PPS + "\n"

@@ -60,6 +60,14 @@ public class CustomerAccount {
 		this.transactionList = transactionList;
 	}
 	
-	
+	public int getTotalTransactions() {
+	    int total = 0;
+
+	    for (AccountTransaction t : transactionList) {
+	        total += t.getAmount();
+	    }
+
+	    return total;
+	}
 	
 }
