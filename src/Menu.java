@@ -456,7 +456,6 @@ public class Menu extends JFrame {
 					JOptionPane.showMessageDialog(null, "There are currently no customers to display. ");
 					admin();
 				} else {
-
 					JButton first, previous, next, last, cancel;
 					JPanel gridPanel, buttonPanel, cancelPanel;
 
@@ -647,22 +646,10 @@ public class Menu extends JFrame {
 
 							if (account.equals("Current Account")) {
 								// create current account
-								boolean valid = true;
-								double balance = 0;
-								String number = String.valueOf("C" + (customerList.indexOf(customer) + 1) * 10
-										+ (customer.getAccounts().size() + 1));// this simple algorithm generates the
-																				// account number
-								ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
-								int randomPIN = (int) (Math.random() * 9000) + 1000;
-								String pin = String.valueOf(randomPIN);
-
-								ATMCard atm = new ATMCard(randomPIN, valid);
-
-								CustomerCurrentAccount current = new CustomerCurrentAccount(atm, number, balance,
-										transactionList);
+								CustomerCurrentAccount current = createCurrentAccount();
 
 								customer.getAccounts().add(current);
-								JOptionPane.showMessageDialog(f, "Account number = " + number + "\n PIN = " + pin,
+								JOptionPane.showMessageDialog(f, "Account number = " + current.number,
 										"Account created.", JOptionPane.INFORMATION_MESSAGE);
 
 								f.dispose();
@@ -671,18 +658,10 @@ public class Menu extends JFrame {
 
 							if (account.equals("Deposit Account")) {
 								// create deposit account
-
-								double balance = 0, interest = 0;
-								String number = String.valueOf("D" + (customerList.indexOf(customer) + 1) * 10
-										+ (customer.getAccounts().size() + 1));// this simple algorithm generates the
-																				// account number
-								ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
-
-								CustomerDepositAccount deposit = new CustomerDepositAccount(interest, number, balance,
-										transactionList);
+								CustomerDepositAccount deposit = createDepositAccount();
 
 								customer.getAccounts().add(deposit);
-								JOptionPane.showMessageDialog(f, "Account number = " + number, "Account created.",
+								JOptionPane.showMessageDialog(f, "Account number = " + deposit.number, "Account created.",
 										JOptionPane.INFORMATION_MESSAGE);
 
 								f.dispose();
@@ -1283,6 +1262,31 @@ public class Menu extends JFrame {
 				admin();
 			}
 		});				
+	}
+	
+	private CustomerCurrentAccount createCurrentAccount() {
+		boolean valid = true;
+		double balance = 0;
+		String number = String.valueOf("C" + (customerList.indexOf(customer) + 1) * 10
+				+ (customer.getAccounts().size() + 1));// this simple algorithm generates the
+														// account number
+		ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
+		int randomPIN = (int) (Math.random() * 9000) + 1000;
+		String pin = String.valueOf(randomPIN);
+
+		ATMCard atm = new ATMCard(randomPIN, valid);	
+		
+		return new CustomerCurrentAccount(atm, number, balance, transactionList);
+	}
+	
+	private CustomerDepositAccount createDepositAccount() {
+		double balance = 0, interest = 0;
+		String number = String.valueOf("D" + (customerList.indexOf(customer) + 1) * 10
+				+ (customer.getAccounts().size() + 1));// this simple algorithm generates the
+														// account number
+		ArrayList<AccountTransaction> transactionList = new ArrayList<AccountTransaction>();
+
+		return new CustomerDepositAccount(interest, number, balance, transactionList);
 	}
 
 	public static boolean isNumeric(String str) // a method that tests if a string is numeric
